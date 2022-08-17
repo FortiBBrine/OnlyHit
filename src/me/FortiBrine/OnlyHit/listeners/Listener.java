@@ -1,5 +1,7 @@
 package me.FortiBrine.OnlyHit.listeners;
 
+// import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,12 +29,37 @@ public class Listener implements org.bukkit.event.Listener {
 		Player damager = (Player) event.getDamager();
 		Player entity = (Player) event.getEntity();
 		
-		String message = config.getString("message");
+		Location loc = entity.getLocation();
+		long x = (long) loc.getX();
+		long y = (long) loc.getY();
+		long z = (long) loc.getZ();
+		String world = loc.getWorld().getName();
+		
+		String message = config.getString("player.message");
 		message = message.replace("%player", damager.getDisplayName());
 		message = message.replace("%user", damager.getName());
+		message = message.replace("%item", damager.getInventory().getItemInMainHand().getType().name());
+		message = message.replace("%x", ""+x);
+		message = message.replace("%y", ""+y);
+		message = message.replace("%z", ""+z);
+		message = message.replace("%world", world);
 		message = message.replace("&", "\u00a7");
 		
 		entity.sendMessage(message);
-	
+		
+		message = config.getString("console.message");
+		message = message.replace("%player1", damager.getDisplayName());
+		message = message.replace("%player2", entity.getDisplayName());
+		message = message.replace("%user1", damager.getName());
+		message = message.replace("%user2", entity.getName());
+		message = message.replace("%item", damager.getInventory().getItemInMainHand().getType().name());
+		message = message.replace("%x", ""+x);
+		message = message.replace("%y", ""+y);
+		message = message.replace("%z", ""+z);
+		message = message.replace("%world", world);
+		message = message.replace("&", "\u00a7");
+		
+		plugin.getLogger().info(message);
+		
 	}
 }
